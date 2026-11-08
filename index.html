@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#050505">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="PrivChat">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+    <link rel="stylesheet" href="styles.css">
+    <title>PrivChat</title>
+</head>
+<body>
+    <!-- Background Layers -->
+    <div id="bg-layer"></div>
+
+    <!-- Landing Page -->
+    <div id="landing-page" class="landing-page">
+        <div class="landing-content">
+            <div class="logo-container">
+                <div class="logo-icon">💬</div>
+                <h1 class="app-title">PrivChat</h1>
+                <p class="tagline">Private, ephemeral conversations.</p>
+            </div>
+            <div class="landing-actions">
+                <button id="create-room-btn" class="primary-btn large">Create Room</button>
+                <div class="join-code-container">
+                    <input type="text" id="join-code-input" placeholder="Enter room code" maxlength="6" autocomplete="off">
+                    <button id="join-code-btn" class="secondary-btn large">Join with Code</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Setup Overlay -->
+    <div id="profile-overlay" class="overlay hidden">
+        <div class="profile-card">
+            <h2>Set Your Profile</h2>
+            <p>This stays only in memory.</p>
+            <div class="avatar-picker">
+                <div class="avatar-options" id="avatar-options">
+                    <button class="avatar-option" data-emoji="😀">😀</button>
+                    <button class="avatar-option" data-emoji="😎">😎</button>
+                    <button class="avatar-option" data-emoji="🐱">🐱</button>
+                    <button class="avatar-option" data-emoji="🔥">🔥</button>
+                    <button class="avatar-option" data-emoji="🌈">🌈</button>
+                    <button class="avatar-option" data-emoji="🚀">🚀</button>
+                </div>
+                <div class="upload-avatar">
+                    <label for="avatar-upload" class="avatar-upload-btn">Upload Image</label>
+                    <input type="file" id="avatar-upload" accept="image/*" hidden>
+                    <img id="avatar-preview" class="avatar-preview hidden" src="" alt="Avatar preview">
+                </div>
+            </div>
+            <input type="text" id="username-input" placeholder="Your username" maxlength="15" autocomplete="off">
+            <button id="save-profile-btn" class="primary-btn">Continue</button>
+        </div>
+    </div>
+
+    <!-- Chat App -->
+    <div id="chat-app" class="app-container hidden">
+        <header class="header">
+            <div class="profile-info">
+                <img id="my-avatar" class="avatar-small" src="" alt="Me">
+                <span id="my-username-display">@username</span>
+            </div>
+            <div class="header-right">
+                <!-- FIX: Using a label triggers the file picker natively on mobile! -->
+                <label for="bg-upload" class="call-btn" title="Change Background" style="display:flex; align-items:center; justify-content:center; cursor:pointer;">🎨</label>
+                <input type="file" id="bg-upload" accept="image/*" hidden>
+                
+                <button id="clear-bg-btn" class="call-btn hidden" title="Clear Background">🚫</button>
+                <button id="video-call-btn" class="call-btn" title="Start video call">📹</button>
+                
+                <div class="participants-badge" id="participants-badge" title="Participants">
+                    <span id="participants-count">0</span> 👥
+                </div>
+                <div class="status-badge" id="status-badge">
+                    <span class="status-dot"></span>
+                    <span id="status-text">Offline</span>
+                </div>
+                <button id="leave-btn" class="leave-btn">✕</button>
+            </div>
+        </header>
+
+        <section class="invite-section">
+            <div class="invite-row">
+                <input type="text" id="invite-link" readonly placeholder="Your invite link will appear here">
+                <button id="copy-link-btn" class="icon-btn" title="Copy invite link">📋</button>
+            </div>
+            <div class="invite-row">
+                <input type="text" id="room-code-display" readonly placeholder="Room code">
+                <button id="copy-code-btn" class="icon-btn" title="Copy room code">📋</button>
+            </div>
+            <div class="invite-actions">
+                <button id="new-link-btn" class="secondary-btn">New Link</button>
+                <label class="group-toggle">
+                    <input type="checkbox" id="group-mode-checkbox"> Group Mode
+                </label>
+            </div>
+            <div class="hint">Share the room code or link with friends. They will auto‑connect when they open it.</div>
+        </section>
+
+        <main id="chat-window" class="chat-window">
+            <div id="messages" class="messages"></div>
+        </main>
+
+        <div id="typing-indicator" class="typing-indicator hidden">
+            <span></span><span></span><span></span> typing...
+        </div>
+
+        <footer class="input-area">
+            <button id="emoji-btn" class="emoji-btn">😊</button>
+            <label for="image-input" class="image-btn" title="Send image">🖼️</label>
+            <input type="file" id="image-input" accept="image/*" hidden>
+            <label for="video-input" class="video-btn" title="Send video">🎥</label>
+            <input type="file" id="video-input" accept="video/*" hidden>
+            <input type="text" id="message-input" placeholder="Type a message..." autocomplete="off">
+            <button id="send-btn" class="primary-btn send-btn">Send</button>
+        </footer>
+
+        <!-- Emoji Picker -->
+        <div id="emoji-picker" class="emoji-picker hidden">
+            <div class="emoji-grid">
+                <span>😀</span><span>😁</span><span>😂</span><span>🤣</span>
+                <span>😊</span><span>😍</span><span>😘</span><span>😎</span>
+                <span>🤔</span><span>😅</span><span>😭</span><span>😡</span>
+                <span>👍</span><span>👎</span><span>👏</span><span>🙌</span>
+                <span>🔥</span><span>💯</span><span>❤️</span><span>😂</span>
+                <span>😮</span><span>😴</span><span>🤤</span><span>🥳</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="app.js?v=16"></script>
+</body>
+</html>
